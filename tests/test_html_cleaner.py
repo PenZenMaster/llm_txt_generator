@@ -1,0 +1,1 @@
+# Placeholder for html_cleaner tests
