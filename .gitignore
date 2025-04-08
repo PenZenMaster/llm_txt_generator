@@ -1,0 +1,39 @@
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Environment files
+.env
+.venv/
+venv/
+env/
+ENV/
+
+# Output files
+*.zip
+*.tar.gz
+*.log
+*.bak
+*.swp
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# VS Code and IDE config
+.vscode/
+.idea/
+
+# Compiled/test artifacts
+*.egg-info/
+*.egg
+dist/
+build/
+
+# LLMs.txt output
+llms.txt
+llms-full.txt
+
+# Pip freeze and dependency files
+pip-log.txt
