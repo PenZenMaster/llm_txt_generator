@@ -1,5 +1,5 @@
 # Author: Skippy the Magnificent & George Penzenik
-# Version: 1.00
+# Version: 1.01
 # Date Modified: 04/07/2025 15:12
 # Comment: CLI entry point for LLMs.txt Generator
 
@@ -14,6 +14,11 @@ def main():
     parser.add_argument('--url', required=True, help='Root URL of the site')
     parser.add_argument('--maxUrls', type=int, default=10, help='Max pages to crawl (default: 10)')
     parser.add_argument('--showFullText', action='store_true', help='Generate llms-full.txt')
+
+    import sys
+    if len(sys.argv) == 1:
+        parser.print_help(sys.stderr)
+        sys.exit(1)
 
     args = parser.parse_args()
 
