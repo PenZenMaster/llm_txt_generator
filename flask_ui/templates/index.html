@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LLMs.txt Generator</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>LLMs.txt Generator</h1>
+        <form method="post">
+            <label>Website URL:</label><br>
+            <input type="url" name="url" required><br><br>
+
+            <label>Max URLs to crawl:</label><br>
+            <input type="number" name="maxUrls" min="1" max="100" value="10"><br><br>
+
+            <label><input type="checkbox" name="showFullText"> Generate llms-full.txt</label><br>
+            <label><input type="checkbox" name="markdown"> Output in Markdown format</label><br><br>
+
+            <input type="submit" value="Generate">
+        </form>
+
+        {% if output %}
+        <h2>Download Files</h2>
+        <a href="/download/{{ output.llms }}">Download llms.txt</a><br>
+        {% if output.full %}
+        <a href="/download/{{ output.full }}">Download llms-full.txt</a>
+        {% endif %}
+        {% endif %}
+
+        {% if log %}
+        <pre>{{ log }}</pre>
+        {% endif %}
+    </div>
+</body>
+</html>
