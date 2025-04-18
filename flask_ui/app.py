@@ -5,12 +5,14 @@ from flask import (
     send_from_directory,
     url_for,
     redirect,
+    flash,
 )
 import subprocess
 import os
 
 # Create Flask app
 app = Flask(__name__, static_folder="static", template_folder="templates")
+app.secret_key = "shades-of-white-skippy-key"  # Needed for flashing messages
 
 # Expected output files from the generator
 OUTPUT_FILES = ["llms.txt", "llms-full.txt"]
@@ -48,13 +50,24 @@ def generate():
         if os.path.exists(fname):
             os.remove(fname)
 
-    # Execute the CLI generator
-    process = subprocess.run(
-        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
-    )
+    try:
+        # Execute the CLI generator
+        process = subprocess.run(
+            cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+        )
+    except Exception as e:
+        flash(f"Error executing generator: {str(e)}", "error")
+        return redirect(url_for("index"))
 
     # Determine which files were created
     available = [f for f in OUTPUT_FILES if os.path.exists(f)]
+
+    # Check for missing module error
+    if "ModuleNotFoundError" in process.stderr:
+        flash(
+            "⚠️ Python module not found. Please make sure all required packages are installed (e.g., beautifulsoup4).",
+            "error",
+        )
 
     # Render the template with execution logs and download links
     return render_template(
