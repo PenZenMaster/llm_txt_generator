@@ -1,7 +1,7 @@
 
 import argparse
 import os
-from check_site import validate_url_and_get_sitemap
+from check_site import validate_url_and_sitemap
 from sitemap_parser import get_all_urls_from_sitemap
 from html_cleaner import extract_text_from_url
 from llms_writer import write_llms_files
@@ -18,7 +18,7 @@ def main():
     max_urls = args.maxUrls
 
     print(f"[*] Validating {root_url}...")
-    sitemap_url = validate_url_and_get_sitemap(root_url)
+    sitemap_url = validate_url_and_sitemap(root_url)
     if not sitemap_url:
         print("[WARN] Sitemap not found or site could not be validated.")
         return
