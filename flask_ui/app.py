@@ -1,4 +1,11 @@
-from flask import Flask, render_template, request, send_from_directory, url_for
+from flask import (
+    Flask,
+    render_template,
+    request,
+    send_from_directory,
+    url_for,
+    redirect,
+)
 import subprocess
 import os
 
@@ -15,17 +22,22 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/generate", methods=["POST"])
+@app.route("/generate", methods=["GET", "POST"])
 def generate():
-    """Handle form submission, invoke the CLI generator, and return results."""
+    if request.method == "GET":
+        return redirect(url_for("index"))
+
     # Gather form inputs
     url = request.form.get("url")
     max_urls = request.form.get("maxUrls") or "10"
     show_full = "showFullText" in request.form
     markdown = "markdown" in request.form
 
-    # Build command to run the existing CLI tool
-    cmd = ["python", "main.py", f"--url={url}", f"--maxUrls={max_urls}"]
+    # Build command to run the existing CLI tool (adjust path to main.py)
+    main_path = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "main.py")
+    )
+    cmd = ["python", main_path, f"--url={url}", f"--maxUrls={max_urls}"]
     if show_full:
         cmd.append("--showFullText")
     if markdown:
