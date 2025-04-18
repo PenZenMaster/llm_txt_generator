@@ -1,73 +1,48 @@
-# Author: Skippy the Magnificent & George Penzenik
-# Version: 1.02
-# Date Modified: 04/07/2025 15:12
-# Comment: CLI entry point for LLMs.txt Generator
 
 import argparse
-from check_site import validate_url_and_sitemap
+import os
+from check_site import validate_url_and_get_sitemap
 from sitemap_parser import get_all_urls_from_sitemap
 from html_cleaner import extract_text_from_url
 from llms_writer import write_llms_files
 
-
 def main():
-    parser = argparse.ArgumentParser(
-        description="""LLMs.txt Generator by Skippy
-
-How It Works:
-- Crawls the provided website's sitemap and extracts up to --maxUrls pages
-- Cleans and groups page content into logical sections (H2/H3 headers)
-- Writes output to:
-  * llms.txt - concise summaries
-  * llms-full.txt - full raw cleaned content (if --showFullText is used)
-  * Optional Markdown formatting with --markdown
-
-Example:
-  python main.py --url https://example.com --showFullText --markdown
-"""
-    )
-    parser.add_argument("--url", required=True, help="Root URL of the site")
-    parser.add_argument(
-        "--maxUrls", type=int, default=10, help="Max pages to crawl (default: 10)"
-    )
-    parser.add_argument(
-        "--showFullText", action="store_true", help="Generate llms-full.txt"
-    )
-    parser.add_argument(
-        "--markdown", action="store_true", help="Output llms.txt in Markdown format"
-    )
-
-    import sys
-
-    if len(sys.argv) == 1:
-        parser.print_help(sys.stderr)
-        sys.exit(1)
+    parser = argparse.ArgumentParser(description='LLMs.txt Generator')
+    parser.add_argument('--url', required=True, help='The root URL of the site to process')
+    parser.add_argument('--maxUrls', type=int, default=10, help='Max number of URLs to fetch')
+    parser.add_argument('--showFullText', action='store_true', help='Include full cleaned text output')
+    parser.add_argument('--markdown', action='store_true', help='Format llms.txt using Markdown')
 
     args = parser.parse_args()
-
     root_url = args.url
-    max_urls = min(max(args.maxUrls, 1), 100)
+    max_urls = args.maxUrls
 
-    print(f"[✓] Validating {root_url}...")
-    sitemap_url = validate_url_and_sitemap(root_url)
+    print(f"[*] Validating {root_url}...")
+    sitemap_url = validate_url_and_get_sitemap(root_url)
+    if not sitemap_url:
+        print("[WARN] Sitemap not found or site could not be validated.")
+        return
 
-    print("🌐 Crawling sitemap(s)...")
+    print(f"[✓] Sitemap found: {sitemap_url}")
     urls = get_all_urls_from_sitemap(sitemap_url, max_urls)
 
-    content_data = []
-    for url in urls:
-        print(f"📄 Extracting from: {url}")
-        text = extract_text_from_url(url)
-        if text:
-            content_data.append((url, text))
+    if not urls:
+        print("[WARN] No URLs found in sitemap.")
+        return
 
-    print("📝 Writing output files...")
-    write_llms_files(
-        content_data, generate_full=args.showFullText, markdown=args.markdown
-    )
+    print(f"[✓] Found {len(urls)} URLs to process.")
 
-    print("✅ Done! Files saved to current directory.")
+    page_texts = {}
+    for i, url in enumerate(urls):
+        print(f"[*] ({i+1}/{len(urls)}) Extracting: {url}")
+        cleaned_text = extract_text_from_url(url)
+        if cleaned_text:
+            page_texts[url] = cleaned_text
 
+    print(f"[✓] Writing output to llms.txt{' and llms-full.txt' if args.showFullText else ''}...")
+    write_llms_files(page_texts, use_markdown=args.markdown, include_full_text=args.showFullText)
 
-if __name__ == "__main__":
+    print("[✓] All done.")
+
+if __name__ == '__main__':
     main()
