@@ -39,7 +39,11 @@ def generate():
     main_path = os.path.abspath(
         os.path.join(os.path.dirname(__file__), "..", "main.py")
     )
-    cmd = ["python", main_path, f"--url={url}", f"--maxUrls={max_urls}"]
+    venv_python = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "venv", "Scripts", "python.exe")
+    )
+    cmd = [venv_python, main_path, f"--url={url}", f"--maxUrls={max_urls}"]
+
     if show_full:
         cmd.append("--showFullText")
     if markdown:
