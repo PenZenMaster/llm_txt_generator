@@ -5,31 +5,26 @@ def extract_text_from_url(url):
     try:
         response = requests.get(url, timeout=10)
         response.raise_for_status()
-        soup = BeautifulSoup(response.text, 'html.parser')
 
-        # Prefer <main> or <article> content if available
+        # Skip non-HTML responses (e.g., plain text, images)
+        content_type = response.headers.get('Content-Type', '')
+        if 'text/html' not in content_type:
+            print(f"[WARN] Skipping non-HTML content at {url}")
+            return []
+
+        soup = BeautifulSoup(response.content, 'lxml')
+
         content_root = soup.find('main') or soup.find('article') or soup.body
+        if not content_root:
+            print(f"[WARN] No usable content section found at {url}")
+            return []
 
-        # Remove junk
-        for tag in content_root(['script', 'style', 'footer', 'nav', 'noscript', 'form', 'header', 'aside', 'button', 'svg', 'img', 'input']):
+        for tag in content_root(['script', 'style', 'nav', 'footer', 'noscript']):
             tag.decompose()
 
-        # Extract text sections grouped by headers
-        sections = []
-        current_section = {"header": "Introduction", "body": ""}
-
-        for element in content_root.descendants:
-            if element.name in ['h2', 'h3']:
-                if current_section["body"]:
-                    sections.append(current_section)
-                current_section = {"header": element.get_text(strip=True), "body": ""}
-            elif element.name is None and isinstance(element, str):
-                current_section["body"] += element.strip() + " "
-
-        if current_section["body"]:
-            sections.append(current_section)
-
-        return sections
+        sections = [section.get_text(separator=' ', strip=True)
+                    for section in content_root.find_all(['h1', 'h2', 'p', 'div'])]
+        return [s for s in sections if s]
 
     except Exception as e:
         print(f"⚠️ Error extracting text from {url}: {e}")
