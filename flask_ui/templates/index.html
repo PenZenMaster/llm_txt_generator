@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>LLMs.txt Generator</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body>
     <div class="container">
         <h1>LLMs.txt Generator</h1>
-        <form method="post">
+        <form action="{{ url_for('generate') }}" method="post">
+
             <label>Website URL:</label><br>
             <input type="url" name="url" required><br><br>
-
             <label>Max URLs to crawl:</label><br>
             <input type="number" name="maxUrls" min="1" max="100" value="10"><br><br>
 
@@ -20,17 +22,24 @@
             <input type="submit" value="Generate">
         </form>
 
-        {% if output %}
-        <h2>Download Files</h2>
-        <a href="/download/{{ output.llms }}">Download llms.txt</a><br>
-        {% if output.full %}
-        <a href="/download/{{ output.full }}">Download llms-full.txt</a>
+        {% if stdout %}
+        <h2>Log Output</h2>
+        <pre>{{ stdout }}</pre>
         {% endif %}
+        {% if stderr %}
+        <h2>Errors</h2>
+        <pre>{{ stderr }}</pre>
+        {% endif %}
+        {% if files %}
+        <h2>Download Results</h2>
+        <ul>
+            {% for file in files %}
+            <li><a href="{{ url_for('download_file', filename=file) }}">{{ file }}</a></li>
+            {% endfor %}
+        </ul>
         {% endif %}
 
-        {% if log %}
-        <pre>{{ log }}</pre>
-        {% endif %}
     </div>
 </body>
+
 </html>
