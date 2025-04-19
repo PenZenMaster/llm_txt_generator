@@ -18,10 +18,10 @@ def nuke_unicode_safe(root_dir):
                     if content != cleaned:
                         with open(path, "w", encoding="utf-8") as f:
                             f.write(cleaned)
-                        print(f"✓ Cleaned: {path}")
+                        print(f" Cleaned: {path}")
                 except Exception as e:
-                    print(f"⚠️ Error on {path}: {e}")
+                    print(f" Error on {path}: {e}")
 
 
-# 🔧 Your actual project path here
+#  Your actual project path here
 nuke_unicode_safe(r"E:\projects\llm_txt_generator")

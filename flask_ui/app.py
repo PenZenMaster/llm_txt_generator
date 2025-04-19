@@ -69,7 +69,7 @@ def generate():
     # Check for missing module error
     if "ModuleNotFoundError" in process.stderr:
         flash(
-            "⚠️ Python module not found. Please make sure all required packages are installed (e.g., beautifulsoup4).",
+            " Python module not found. Please make sure all required packages are installed (e.g., beautifulsoup4).",
             "error",
         )
 

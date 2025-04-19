@@ -23,6 +23,6 @@ def get_all_urls_from_sitemap(sitemap_url, max_urls=10):
                     break
 
     except Exception as e:
-        print(f"⚠️ Failed to parse sitemap {sitemap_url}: {e}")
+        print(f" Failed to parse sitemap {sitemap_url}: {e}")
     
     return urls[:max_urls]

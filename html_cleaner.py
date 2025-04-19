@@ -27,5 +27,5 @@ def extract_text_from_url(url):
         return [s for s in sections if s]
 
     except Exception as e:
-        print(f"⚠️ Error extracting text from {url}: {e}")
+        print(f" Error extracting text from {url}: {e}")
         return []

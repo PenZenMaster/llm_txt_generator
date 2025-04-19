@@ -31,14 +31,14 @@ def main():
         print("[WARN] Sitemap not found or site could not be validated.")
         return
 
-    print(f"[✓] Sitemap found: {sitemap_url}")
+    print(f"[] Sitemap found: {sitemap_url}")
     urls = get_all_urls_from_sitemap(sitemap_url, max_urls)
 
     if not urls:
         print("[WARN] No URLs found in sitemap.")
         return
 
-    print(f"[✓] Found {len(urls)} URLs to process.")
+    print(f"[] Found {len(urls)} URLs to process.")
 
     page_texts = {}
     for i, url in enumerate(urls):
@@ -48,13 +48,13 @@ def main():
             page_texts[url] = cleaned_text
 
     print(
-        f"[✓] Writing output to llms.txt{' and llms-full.txt' if args.showFullText else ''}..."
+        f"[] Writing output to llms.txt{' and llms-full.txt' if args.showFullText else ''}..."
     )
     write_llms_files(
         page_texts, use_markdown=args.markdown, include_full_text=args.showFullText
     )
 
-    print("[✓] All done.")
+    print("[] All done.")
 
 
 if __name__ == "__main__":
