@@ -2,7 +2,7 @@
 Set-Location "E:\projects\llm_txt_generator"
 
 # Activate the virtual environment
-& ".\.venv\Scripts\Activate.ps1"
+& ".venv\Scripts\Activate.ps1"
 
 # Ensure required Python packages are installed
 pip install -r requirements.txt
