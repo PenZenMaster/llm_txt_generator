@@ -1,61 +1,56 @@
-# LLM Text Generator & Site Scanner
+# 🧠 LLMs Text Generator
 
-A Python-based tool for generating LLM-ready training text from websites using sitemaps, HTML scrapers, and content filters. Includes both a Flask web UI and command-line interface (CLI), as well as a complete Pytest-based test suite.
+## Overview
+This tool converts structured YAML files into SEO-optimized `llms.txt` files designed to help Large Language Models (LLMs) like ChatGPT, Bing AI, and Perplexity understand the semantic footprint of your website.
 
-## 🚀 Features
-- ✅ Hierarchical sitemap discovery (`sitemap_index.xml` supported)
-- ✅ Robust HTML content extraction (skips non-HTML safely)
-- ✅ CLI mode and Flask web interface
-- ✅ Full test suite located in `tests/`
-- ✅ Auto-generated output (`llms.txt`, `llms-full.txt`)
-- ✅ Download links from UI, or script output via CLI
+---
 
-## 📁 Directory Structure
+## 🔧 Key Components
 
+- `generate_llms.py` – CLI launcher that accepts a YAML config and produces `llms.txt`
+- `llms_writer.py` – Core logic for formatting structured YAML content
+- `run_llm_txt_generator.bat` – Desktop batch launcher for non-terminal users
+- `launch_llm_txt_generator.ps1` – Activates virtual environment and runs generator
+- Output is saved to `output/llms.txt` or to the root directory of a WordPress site
+
+---
+
+## 🧩 Inputs
+
+### Example YAML
+```yaml
+client_name: Slick Willy
+address:
+  street: 6869 wine
+  city: Anytown
+  state: WY
+  zip: 999999
+  country: US
+website: https://me.me
+category: Slicker
+services:
+  - service
+target_cities: []
+top_pages: []
+faq_prompts: []
+keywords: []
+citations:
+  - name: Google
+    url: https://google.com
 ```
-llm_txt_generator/
-├── main.py
-├── html_cleaner.py
-├── sitemap_parser.py
-├── llms_writer.py
-├── check_site.py
-├── run_tests.py
-├── requirements.txt
-├── flask_ui/
-│   ├── app.py
-│   ├── templates/
-│   └── static/
-└── tests/
-    ├── test_check_site.py
-    ├── test_html_cleaner.py
-    ├── test_llms_writer.py
-    ├── test_sitemap_parser.py
-    ├── test_sitemap_nested.py
-    └── __init__.py
-```
 
-## ⚙️ How to Run (Dev)
+---
 
-### 1. Install dependencies
+## ✅ Usage
 ```bash
-pip install -r requirements.txt
+python generate_llms.py --config path/to/client.yaml --output output/llms.txt --seo-mode
 ```
 
-### 2. Run the Flask UI
-```bash
-python flask_ui/app.py
-```
+---
 
-### 3. Run tests
-```bash
-python run_tests.py
-```
+## 🚀 Next Steps
+- [ ] Integrate with Skippy YAML Builder for one-click generation
+- [ ] Return `llms.txt` content directly to YAML Builder UI
+- [ ] Upload `llms.txt` to root of WordPress site for LLM indexing
+- [ ] Optionally create a hidden WordPress page for `llms.txt` via Push It Real Good
 
-### 4. Run CLI
-```bash
-python main.py --url=https://example.com --maxUrls=10 --showFullText --markdown
-```
-
-## 🧪 Notes
-- Output files (`llms.txt`, `llms-full.txt`) are generated in the working directory.
-- Non-HTML pages are gracefully skipped during scraping.
