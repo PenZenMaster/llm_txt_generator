@@ -9,6 +9,7 @@ from flask import (
 )
 import subprocess
 import os
+import sys
 
 # Create Flask app
 app = Flask(__name__, static_folder="static", template_folder="templates")
@@ -39,10 +40,8 @@ def generate():
     main_path = os.path.abspath(
         os.path.join(os.path.dirname(__file__), "..", "main.py")
     )
-    venv_python = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..", "venv", "Scripts", "python.exe")
-    )
-    cmd = [venv_python, main_path, f"--url={url}", f"--maxUrls={max_urls}"]
+    # Reuse the interpreter running this app so the generator gets the same venv
+    cmd = [sys.executable, main_path, f"--url={url}", f"--maxUrls={max_urls}"]
 
     if show_full:
         cmd.append("--showFullText")
